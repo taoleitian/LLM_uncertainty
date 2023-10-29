@@ -78,8 +78,9 @@ def get_ans(pred):
 
 
 from collections import Counter
+
 def get_maj(ans_list):
-  is_all_float = True
+  is_all_float = False
   float_list = []
   for ans in ans_list:
     if _is_float(ans):
