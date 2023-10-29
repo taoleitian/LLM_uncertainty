@@ -43,7 +43,7 @@ y_pred_sorted = np.array(pred_list)[sorted_indices]
 y_true_sorted = np.array(gt_list)[sorted_indices]
 
 # 计算选择性准确率A(c)对于每个可能的c
-coverages = np.linspace(0, 1, len(pred_list) + 1)[1:]  # [0.25, 0.5, 0.75, 1.0]
+coverages = np.linspace(0, 1, 20)[1:]  # [0.25, 0.5, 0.75, 1.0]
 selective_accuracies = []
 
 for c in coverages:
