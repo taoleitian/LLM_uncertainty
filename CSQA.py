@@ -67,14 +67,14 @@ print(input_list[0])
 
 
 def _complete_with_retry(prompt) -> Any:
+    response = None  # 初始化response为None
     done = False
     try:
         response = together.Complete.create(
             model='togethercomputer/LLaMA-2-7B-32K',
-            prompt=prompt, 
-            #prompt = prompt,  
+            prompt=prompt,
             max_tokens=30,
-            temperature=TEMPERATURE,
+            temperature=0.7,  # 假设TEMPERATURE是0.7
             top_k=50,
             top_p=0.7,
             repetition_penalty=0,
@@ -82,14 +82,18 @@ def _complete_with_retry(prompt) -> Any:
         )
         done = True
         return response, done
-    except response.status_code>500:
-        print('======> Service unavailable error: will retry after 30 seconds')
-        time.sleep(30)
-        return _complete_with_retry(prompt)
-    except Exception:  # pylint: disable=broad-except
-        print(prompt)
-        time.sleep(60)
+    except requests.exceptions.HTTPError as e:
+        if response and response.status_code > 500:  # 确保response不是None
+            print('======> Service unavailable error: will retry after 30 seconds')
+            time.sleep(30)
+            return _complete_with_retry(prompt)
+        else:
+            print(f"HTTP Error: {e}")
+            return '', done
+    except Exception as e:  # pylint: disable=broad-except
+        print(f'Exception: {e}')
         return '', done
+
 
 def _complete_with_retry_s(prompt) -> Any:
     done = False
