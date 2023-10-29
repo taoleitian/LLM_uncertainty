@@ -93,7 +93,7 @@ def get_maj(ans_list):
     return f.most_common()[0][0]
   else:
     c = Counter(ans_list)
-    return c.most_common()[0][0]
+    return c.most_common()[0]#[0]
 
 def get_str_ans(pred):
   text = pred.split('Question:')[0].split('[eot]')[0].replace('\n', '').strip()
