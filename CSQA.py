@@ -1,6 +1,3 @@
-"""Call GPT-3 model to get predictions."""
-
-import dataclasses
 import json
 import math
 import time
@@ -10,8 +7,8 @@ from utils import format_question
 import random
 random.seed(0)
 together.api_key='98e058c881079af8221b192917287b3d82856fafb9d066e8828754a49c9f60ee'
-#model_list = together.Models.list()
-#print(f"{len(model_list)} models available")
+model_list = together.Models.list()
+print(f"{len(model_list)} models available")
 
 RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
@@ -50,14 +47,14 @@ for line in lines:
     for index in range(len(COINFLIP_EXAMPLES)//2):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-      print(prompt)
+      #print(prompt)
 
     # Negtive examples
     prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely high, close to 0.\n"
     for index in range(len(COINFLIP_EXAMPLES)//2, len(COINFLIP_EXAMPLES)):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True,answer_True=False)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.0, 0.2), 2)) + '.\n\n'
-      print(prompt)
+      #print(prompt)
     input_list.append(prompt + question)
     label_list.append(answer)
 
@@ -83,7 +80,7 @@ def _complete_with_retry(prompt) -> Any:
         return response, done
     except Exception:  # pylint: disable=broad-except
         print(prompt)
-        time.sleep(60)
+        #time.sleep(60)
         return '', done
 
 start_time = time.time()
