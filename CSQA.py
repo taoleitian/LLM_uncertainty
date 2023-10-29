@@ -57,7 +57,7 @@ def _complete_with_retry(prompt) -> Any:
     done = False
     try:
         response = together.Complete.create(
-            model='togethercomputer/Llama-2-7B-32K-Instruct',
+            model='togethercomputer/llama-2-7b',
             prompt=prompt, 
             #prompt = prompt,  
             max_tokens=30,

@@ -22,7 +22,7 @@ def format_question(json_data, is_val=False):
     formatted_str = f"Question: {stem}\n"
     
     formatted_str += f"Question Concept: {question_concept}\n"
-    formatted_str += f"Let us think it step by step.\n"
+    #formatted_str += f"Let us think it step by step.\n"
     
     for choice in choices:
         label = choice.get("label", "Unknown label")
