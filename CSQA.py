@@ -46,7 +46,7 @@ for line in lines:
     prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
     for j, ex in enumerate(COINFLIP_EXAMPLES):
       prompt += ex + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-    input_list.append(prompt + 'Q: ' + question)
+    input_list.append(prompt + question)
     label_list.append(answer)
 
 print(len(input_list))
@@ -65,13 +65,13 @@ def _complete_with_retry(prompt) -> Any:
             top_k=50,
             top_p=0.7,
             repetition_penalty=0,
-            stop="Q:"
+            stop="Question:"
         )
         done = True
         return response, done
     except Exception:  # pylint: disable=broad-except
         print(prompt)
-        return ''
+        return '', done
 
 start_time = time.time()
 SELF_CONSISTENCY = 30
