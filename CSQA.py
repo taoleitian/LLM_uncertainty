@@ -66,9 +66,25 @@ print(len(input_list))
 print(input_list[0])
 
 
-def _complete_with_retry_S(prompt) -> Any:
+def _complete_with_retry(prompt) -> Any:
     done = False
     try:
+        response = together.Complete.create(
+            model='togethercomputer/LLaMA-2-7B-32K',
+            prompt=prompt, 
+            #prompt = prompt,  
+            max_tokens=30,
+            temperature=TEMPERATURE,
+            top_k=50,
+            top_p=0.7,
+            repetition_penalty=0,
+            stop="Question:"
+        )
+        done = True
+        return response, done
+    except together.error.HTTPError:
+        print('======> Service unavailable error: will retry after 30 seconds')
+        time.sleep(30)
         response = together.Complete.create(
             model='togethercomputer/LLaMA-2-7B-32K',
             prompt=prompt, 
@@ -87,7 +103,7 @@ def _complete_with_retry_S(prompt) -> Any:
         time.sleep(60)
         return '', done
 
-def _complete_with_retry(prompt) -> Any:
+def _complete_with_retry_s(prompt) -> Any:
     done = False
     response = together.Complete.create(
             model='togethercomputer/LLaMA-2-7B-32K',
