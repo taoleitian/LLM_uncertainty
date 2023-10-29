@@ -23,7 +23,7 @@ OUTPUT_PATH = 'results/CSQA/SC_30_500.jsonl'
 
 
 COINFLIP_EXAMPLES = []
-FEW_SHOT = 4
+FEW_SHOT = 8
 formatted_questions = []
 with open('dataset/CSQA/train_rand_split.jsonl', 'r') as file:
   few_shot_lines = file.readlines()
@@ -51,8 +51,7 @@ for line in lines:
     for index in range(len(COINFLIP_EXAMPLES)//2):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-      #print(prompt)
-
+    '''
     # Negtive examples
     prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely high, close to 0.\n"
     for index in range(len(COINFLIP_EXAMPLES)//2, len(COINFLIP_EXAMPLES)):
@@ -61,6 +60,7 @@ for line in lines:
       #print(prompt)
     input_list.append(prompt + question)
     label_list.append(answer)
+    '''
 
 print(len(input_list))
 print(input_list[0])
