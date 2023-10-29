@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
-
+import random
+random.seed(0)
 NUMBER_SET = [str(num) for num in range(0, 10)]
 
 def _is_float(s):
@@ -13,8 +14,8 @@ def _is_float(s):
 FINAL_ANS = 'Answer:'
 FINAL_CONFIDENCE = 'Confidence:'
 
-def format_question(json_data, is_val=False):
-    question_concept = json_data.get("question_concept", "Unknown")
+def format_question(json_data, is_val=False, answer_True=True):
+    question_concept = json_data["question"]["question_concept"]
     stem = json_data.get("question", {}).get("stem", "Unknown question")
     choices = json_data.get("question", {}).get("choices", [])
     answer_key = json_data.get("answerKey", "Unknown")
@@ -29,7 +30,11 @@ def format_question(json_data, is_val=False):
         text = choice.get("text", "Unknown text")
         formatted_str += f"{label}. {text}\n"
     if is_val ==True:    
-      formatted_str += f"Answer: {answer_key}"
+      if answer_True:
+          formatted_str += f"Answer: {answer_key}"
+      else:
+          wrong_answers = [choice for choice in ["A", "B", "C", "D", "E"] if choice != answer_key]
+          formatted_str += f"Answer: {wrong_answers[random.randrange(0, 4)]}"  # Just picking the first wrong answer for illustration
     else:
       formatted_str += f"Answer:"
 
