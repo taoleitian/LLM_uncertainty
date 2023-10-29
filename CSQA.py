@@ -18,7 +18,7 @@ RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
 ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = 'dataset/CSQA/dev_rand_split.jsonl'
-OUTPUT_PATH = 'results/CSQA/only_postive.jsonl'
+OUTPUT_PATH = 'results/CSQA/only_postive_30.jsonl'
 
 
 
@@ -110,7 +110,7 @@ def _complete_with_retry_s(prompt) -> Any:
 
 
 start_time = time.time()
-SELF_CONSISTENCY = 1
+SELF_CONSISTENCY = 30
 with open(OUTPUT_PATH, 'w') as outfile:
 
   num_examples = 500
