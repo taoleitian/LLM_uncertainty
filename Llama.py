@@ -59,8 +59,8 @@ label_list = []
 
 for line in lines:
   fields = json.loads(line.split('\n')[0].split('\t')[0])
-  question = format_question(fields, is_val=False)
-  answer = fields["answerKey"]
+  question = fields["question"]
+  answer = fields["answer"]
 
   for i in range(RATIONALE_BATCH):
     prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'

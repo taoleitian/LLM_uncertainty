@@ -25,8 +25,8 @@ for line in lines:
       confidence_list.append(confidence)
   if not pred:
     continue
-  #maj_ans = utils.get_maj(ans_list)
-  maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list, 0.1)
+  maj_ans = utils.get_maj(ans_list)
+  #maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list, 0.1)
   target = datas['answer']
   if str(target) == str(maj_ans):
     correct += 1
