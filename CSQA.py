@@ -6,7 +6,11 @@ import together
 from utils import format_question
 import random
 random.seed(0)
+
+
 together.api_key='98e058c881079af8221b192917287b3d82856fafb9d066e8828754a49c9f60ee'
+
+#together.api_key='54dd8b1db669c11142c88e43391741d5cd5865078c9a95095a4db72ba89b6bbc'
 model_list = together.Models.list()
 print(f"{len(model_list)} models available")
 
@@ -62,7 +66,7 @@ print(len(input_list))
 print(input_list[0])
 
 
-def _complete_with_retry(prompt) -> Any:
+def _complete_with_retry_S(prompt) -> Any:
     done = False
     try:
         response = together.Complete.create(
@@ -80,8 +84,25 @@ def _complete_with_retry(prompt) -> Any:
         return response, done
     except Exception:  # pylint: disable=broad-except
         print(prompt)
-        #time.sleep(60)
+        time.sleep(60)
         return '', done
+
+def _complete_with_retry(prompt) -> Any:
+    done = False
+    response = together.Complete.create(
+            model='togethercomputer/LLaMA-2-7B-32K',
+            prompt=prompt, 
+            #prompt = prompt,  
+            max_tokens=30,
+            temperature=TEMPERATURE,
+            top_k=50,
+            top_p=0.7,
+            repetition_penalty=0,
+            stop="Question:"
+    )
+    done = True
+    return response, done
+
 
 start_time = time.time()
 SELF_CONSISTENCY = 1
