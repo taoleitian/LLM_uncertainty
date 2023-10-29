@@ -93,19 +93,22 @@ def _complete_with_retry(prompt) -> Any:
 '''
 
 def _complete_with_retry(prompt) -> Any:
-    #prompt = [prompt]
-    response = together.Complete.create(
-        model='togethercomputer/Llama-2-7B-32K-Instruct',
-        prompt=prompt, 
-        #prompt = prompt,  
-        max_tokens=30,
-        temperature=TEMPERATURE,
-        top_k=50,
-        top_p=0.7,
-        repetition_penalty=0,
-        stop="Q:"
-    )
-    return response
+    try:
+        response = together.Complete.create(
+            model='togethercomputer/Llama-2-7B-32K-Instruct',
+            prompt=prompt, 
+            #prompt = prompt,  
+            max_tokens=30,
+            temperature=TEMPERATURE,
+            top_k=50,
+            top_p=0.7,
+            repetition_penalty=0,
+            stop="Q:"
+        )
+        return response
+    except Exception:  # pylint: disable=broad-except
+        print(prompt)
+        return ''
 
 start_time = time.time()
 SELF_CONSISTENCY = 30
