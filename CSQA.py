@@ -82,7 +82,7 @@ def _complete_with_retry(prompt) -> Any:
         )
         done = True
         return response, done
-    except together.error.HTTPError:
+    except together.error:
         print('======> Service unavailable error: will retry after 30 seconds')
         time.sleep(30)
         return _complete_with_retry(prompt)
