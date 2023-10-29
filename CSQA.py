@@ -85,19 +85,7 @@ def _complete_with_retry(prompt) -> Any:
     except together.error.HTTPError:
         print('======> Service unavailable error: will retry after 30 seconds')
         time.sleep(30)
-        response = together.Complete.create(
-            model='togethercomputer/LLaMA-2-7B-32K',
-            prompt=prompt, 
-            #prompt = prompt,  
-            max_tokens=30,
-            temperature=TEMPERATURE,
-            top_k=50,
-            top_p=0.7,
-            repetition_penalty=0,
-            stop="Question:"
-        )
-        done = True
-        return response, done
+        return _complete_with_retry(prompt)
     except Exception:  # pylint: disable=broad-except
         print(prompt)
         time.sleep(60)
