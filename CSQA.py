@@ -52,47 +52,9 @@ for line in lines:
 print(len(input_list))
 print(input_list[0])
 
-'''
-def _complete_with_retry(prompt) -> Any:
-  try:
-    
-    url = "https://api.together.xyz/inference"
-    payload = {
-        "model": "togethercomputer/llama-2-13b",
-        "prompt": [prompt, prompt],
-        "max_tokens": 128,
-        "stop": "Q:",
-        "temperature": 0,
-        "top_p": 0.7,
-        "top_k": 50,
-        "repetition_penalty": 1
-    }
-    headers = {
-        #"accept": "application/json",
-        #"content-type": "application/json",
-        "Authorization": "Bearer 98e058c881079af8221b192917287b3d82856fafb9d066e8828754a49c9f60ee"
-    }
-
-    response = requests.post(url, json=payload, headers=headers)
-
-    #print(response.text)
-    response = json.loads(response.text)['output']
-    return response
-
-  except openai.error.RateLimitError:
-    print('======> Rate limit error')
-    time.sleep(10)
-    return _complete_with_retry(prompt)
-  except openai.error.ServiceUnavailableError:
-    print('======> Service unavailable error: will retry after 60 seconds')
-    time.sleep(30)
-    return _complete_with_retry(prompt)
-  except Exception:  # pylint: disable=broad-except
-    print('Exception!!')
-    return ''
-'''
 
 def _complete_with_retry(prompt) -> Any:
+    done = False
     try:
         response = together.Complete.create(
             model='togethercomputer/Llama-2-7B-32K-Instruct',
@@ -105,7 +67,8 @@ def _complete_with_retry(prompt) -> Any:
             repetition_penalty=0,
             stop="Q:"
         )
-        return response
+        done = True
+        return response, done
     except Exception:  # pylint: disable=broad-except
         print(prompt)
         return ''
@@ -121,8 +84,9 @@ with open(OUTPUT_PATH, 'w') as outfile:
     pred['input'] = input_batch
     pred['output'] = []
     for time_prompt in range(SELF_CONSISTENCY):
-      response = _complete_with_retry(input_batch)
-      pred['output'].append(response['output']['choices'][0]['text'])
+      response, done = _complete_with_retry(input_batch)
+      if done:
+        pred['output'].append(response['output']['choices'][0]['text'])
     pred['answer'] = label_list[index]
     json.dump(pred, outfile)
     outfile.write('\n')
