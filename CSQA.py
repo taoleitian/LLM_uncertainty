@@ -83,13 +83,10 @@ def _complete_with_retry(prompt) -> Any:
         done = True
         return response, done
     except requests.exceptions.HTTPError as e:
-        if response and response.status_code > 500:  # 确保response不是None
-            print('======> Service unavailable error: will retry after 30 seconds')
-            time.sleep(30)
-            return _complete_with_retry(prompt)
-        else:
-            print(f"HTTP Error: {e}")
-            return '', done
+        print('======> Service unavailable error: will retry after 30 seconds')
+        time.sleep(30)
+        return _complete_with_retry(prompt)
+
     except Exception as e:  # pylint: disable=broad-except
         print(f'Exception: {e}')
         return '', done
