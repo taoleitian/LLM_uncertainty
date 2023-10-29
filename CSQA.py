@@ -65,6 +65,7 @@ for line in lines:
 print(len(input_list))
 print(input_list[0])
 
+import requests  # 确保你已经导入了requests库
 
 def _complete_with_retry(prompt) -> Any:
     response = None  # 初始化response为None
