@@ -71,6 +71,7 @@ def _complete_with_retry(prompt) -> Any:
         return response, done
     except Exception:  # pylint: disable=broad-except
         print(prompt)
+        time.sleep(60)
         return '', done
 
 start_time = time.time()
