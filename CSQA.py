@@ -17,7 +17,7 @@ RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
 ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = 'dataset/CSQA/dev_rand_split.jsonl'
-OUTPUT_PATH = 'results/CSQA/baseline.jsonl'
+OUTPUT_PATH = 'results/CSQA/SC_30_500.jsonl'
 
 
 
@@ -111,7 +111,7 @@ start_time = time.time()
 SELF_CONSISTENCY = 30
 with open(OUTPUT_PATH, 'w') as outfile:
 
-  num_examples = 300
+  num_examples = 500
   for index in range(num_examples):
     input_batch = input_list[index]
     pred = {}
