@@ -58,10 +58,9 @@ for line in lines:
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True,answer_True=False)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.0, 0.2), 2)) + '.\n\n'
       #print(prompt)
+    '''
     input_list.append(prompt + question)
     label_list.append(answer)
-    '''
-
 print(len(input_list))
 print(input_list[0])
 
