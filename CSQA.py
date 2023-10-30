@@ -1,11 +1,11 @@
 import json
-import math
 import time
 from typing import Any
 import together
 from utils import format_question
 import random
 random.seed(0)
+import requests  
 
 
 together.api_key='98e058c881079af8221b192917287b3d82856fafb9d066e8828754a49c9f60ee'
@@ -18,12 +18,12 @@ RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
 ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = 'dataset/CSQA/dev_rand_split.jsonl'
-OUTPUT_PATH = 'results/CSQA/only_postive_30.jsonl'
+OUTPUT_PATH = 'results/CSQA/with_negtive_30.jsonl'
 
 
 
 COINFLIP_EXAMPLES = []
-FEW_SHOT = 8
+FEW_SHOT = 4
 formatted_questions = []
 with open('dataset/CSQA/train_rand_split.jsonl', 'r') as file:
   few_shot_lines = file.readlines()
@@ -51,23 +51,21 @@ for line in lines:
     for index in range(len(COINFLIP_EXAMPLES)//2):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-    '''
+    
     # Negtive examples
     prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely high, close to 0.\n"
     for index in range(len(COINFLIP_EXAMPLES)//2, len(COINFLIP_EXAMPLES)):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True,answer_True=False)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.0, 0.2), 2)) + '.\n\n'
       #print(prompt)
-    '''
+    
     input_list.append(prompt + question)
     label_list.append(answer)
 print(len(input_list))
 print(input_list[0])
 
-import requests  # 确保你已经导入了requests库
-
 def _complete_with_retry(prompt) -> Any:
-    response = None  # 初始化response为None
+    response = None 
     done = False
     try:
         response = together.Complete.create(
@@ -110,7 +108,7 @@ def _complete_with_retry_s(prompt) -> Any:
 
 
 start_time = time.time()
-SELF_CONSISTENCY = 30
+SELF_CONSISTENCY = 1
 with open(OUTPUT_PATH, 'w') as outfile:
 
   num_examples = 500

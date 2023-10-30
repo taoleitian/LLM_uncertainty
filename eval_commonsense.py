@@ -2,7 +2,7 @@ import json
 import utils
 import numpy as np
 
-with open('results/CSQA/SC_30_500.jsonl', 'r') as f:
+with open('results/CSQA/with_negtive_30.jsonl', 'r') as f:
   lines = f.readlines()
 
 correct = 0
