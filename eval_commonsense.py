@@ -1,8 +1,24 @@
 import json
 import utils
 import numpy as np
+import argparse
 
-with open('results/CSQA/only_negtive_1.jsonl', 'r') as f:
+def arg_parser():
+    parser = argparse.ArgumentParser(description="CoT")
+    parser.add_argument("--random_seed", type=int, default=1, help="random seed")
+    parser.add_argument(
+        "--save_path", type=str, default=".csv", help="number of postive samples"
+    )
+    parser.add_argument(
+        "--results_path", type=str, default=".csv", help="number of postive samples"
+    )
+
+    args = parser.parse_args()
+    return args
+
+args = arg_parser()
+
+with open('results/two_type_shot/two.jsonl', 'r') as f:
   lines = f.readlines()
 
 correct = 0
@@ -37,7 +53,37 @@ for line in lines:
 
 
 # 随机生成置信度作为示例
-
+def compute_ece(answer, output, confidence, num_bins=10):
+    # 初始化变量
+    bin_boundaries = np.linspace(0, 1, num_bins + 1)
+    bin_acc = np.zeros(num_bins)
+    bin_conf = np.zeros(num_bins)
+    bin_count = np.zeros(num_bins)
+    
+    n = len(answer)
+    
+    # 创建一个数组来存储每个样本是否被正确分类（1 = 正确，0 = 错误）
+    correct = np.array([1 if a == o else 0 for a, o in zip(answer, output)])
+    
+    # 对每个样本进行统计
+    for c, conf in zip(correct, confidence):
+        # 查找对应的 bin
+        bin_idx = np.digitize(conf, bin_boundaries) - 1
+        bin_idx = np.clip(bin_idx, 0, num_bins - 1)
+        
+        # 更新 bin 统计
+        bin_count[bin_idx] += 1
+        bin_acc[bin_idx] += c
+        bin_conf[bin_idx] += conf
+    
+    # 计算每个 bin 的准确率和置信度
+    bin_acc /= (bin_count + 1e-15)
+    bin_conf /= (bin_count + 1e-15)
+    
+    # 计算 ECE
+    ece = np.sum(bin_count / n * np.abs(bin_acc - bin_conf))
+    
+    return ece
 # 根据置信度排序数据
 sorted_indices = np.argsort(confi_list)[::-1]
 y_pred_sorted = np.array(pred_list)[sorted_indices]
@@ -54,7 +100,7 @@ for c in coverages:
     
     accuracy_at_c = np.mean(top_n_predictions == top_n_true)
     selective_accuracies.append(accuracy_at_c)
-
+compute_ece(pred_list, gt_list, confi_list)
 # 使用梯形法则计算AUC
 auc = np.trapz(selective_accuracies, coverages)
 print("AUC:", auc)

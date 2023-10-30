@@ -6,7 +6,7 @@ import math
 import time
 from typing import Any
 import openai
-
+import argparse
 
 openai.api_key = '<YOUR-GPT-3-KEY>'
 
@@ -16,6 +16,25 @@ ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = '<YOUR-PATH>/coinflip4.tsv'
 OUTPUT_PATH = '<YOUR-PATH>/coinflip4_output_sc_001.jsonl'
 
+def arg_parser():
+    parser = argparse.ArgumentParser(description="CoT")
+    parser.add_argument("--random_seed", type=int, default=1, help="random seed")
+    parser.add_argument(
+        "--num_postive", type=int, default="2", help="number of postive samples"
+    )
+    parser.add_argument(
+        "--num_negative", type=int, default="2", help="number of negative samples"
+    )
+    parser.add_argument(
+        "--samples", type=int, default="500", help="number of samples to test"
+    )
+    parser.add_argument(
+        "--samples", type=int, default="500", help="number of samples to test"
+    )
+
+    return args
+
+args = arg_parser()
 
 @dataclasses.dataclass
 class Example:

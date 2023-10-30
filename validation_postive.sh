@@ -1,0 +1,15 @@
+python3 CSQA.py --num_postive 1 --num_negative 1 --temprature 0.7 --save_path 1_1_7_01.jsonl
+python3 CSQA.py --num_postive 1 --num_negative 1 --temprature 0.7 --save_path 1_1_7_02.jsonl
+python3 CSQA.py --num_postive 1 --num_negative 1 --temprature 0.7 --save_path 1_1_7_03.jsonl
+python3 CSQA.py --num_postive 1 --num_negative 1 --temprature 0.7 --save_path 1_1_7_04.jsonl
+python3 CSQA.py --num_postive 1 --num_negative 1 --temprature 0.7 --save_path 1_1_7_05.jsonl
+python3 CSQA.py --num_postive 2 --num_negative 0 --temprature 0.7 --save_path 2_0_7_01.jsonl
+python3 CSQA.py --num_postive 2 --num_negative 0 --temprature 0.7 --save_path 2_0_7_02.jsonl
+python3 CSQA.py --num_postive 2 --num_negative 0 --temprature 0.7 --save_path 2_0_7_03.jsonl
+python3 CSQA.py --num_postive 2 --num_negative 0 --temprature 0.7 --save_path 2_0_7_04.jsonl
+python3 CSQA.py --num_postive 2 --num_negative 0 --temprature 0.7 --save_path 2_0_7_05.jsonl
+python3 CSQA.py --num_postive 0 --num_negative 2 --temprature 0.7 --save_path 0_2_7_01.jsonl
+python3 CSQA.py --num_postive 0 --num_negative 2 --temprature 0.7 --save_path 0_2_7_02.jsonl
+python3 CSQA.py --num_postive 0 --num_negative 2 --temprature 0.7 --save_path 0_2_7_03.jsonl
+python3 CSQA.py --num_postive 0 --num_negative 2 --temprature 0.7 --save_path 0_2_7_04.jsonl
+python3 CSQA.py --num_postive 0 --num_negative 2 --temprature 0.7 --save_path 0_2_7_05.jsonl
