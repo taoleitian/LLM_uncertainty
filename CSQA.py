@@ -18,12 +18,12 @@ RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
 ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = 'dataset/CSQA/dev_rand_split.jsonl'
-OUTPUT_PATH = 'results/CSQA/with_negtive_30.jsonl'
+OUTPUT_PATH = 'results/CSQA/only_negtive_1.jsonl'
 
 
 
 COINFLIP_EXAMPLES = []
-FEW_SHOT = 4
+FEW_SHOT = 8
 formatted_questions = []
 with open('dataset/CSQA/train_rand_split.jsonl', 'r') as file:
   few_shot_lines = file.readlines()
@@ -45,13 +45,14 @@ for line in lines:
 
   for i in range(RATIONALE_BATCH):
     prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
-
+    
+    '''
     # Postive examples
     prompt += "Here are some positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
     for index in range(len(COINFLIP_EXAMPLES)//2):
       question_prompt = format_question(COINFLIP_EXAMPLES[index], is_val=True)
       prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-    
+    '''
     # Negtive examples
     prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely high, close to 0.\n"
     for index in range(len(COINFLIP_EXAMPLES)//2, len(COINFLIP_EXAMPLES)):
@@ -108,7 +109,7 @@ def _complete_with_retry_s(prompt) -> Any:
 
 
 start_time = time.time()
-SELF_CONSISTENCY = 30
+SELF_CONSISTENCY = 1
 with open(OUTPUT_PATH, 'w') as outfile:
 
   num_examples = 500
