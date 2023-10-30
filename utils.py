@@ -170,3 +170,25 @@ def vote_based_on_confidence(answers, confidences, temp=1.0):
     
     # 返回获得最多票数的答案
     return sorted_votes[0][0]
+from collections import defaultdict
+
+def major_vote_top_k(answers, confidences, k=3, temp=1.0):
+    votes = defaultdict(int)
+    
+    # Calculate softmax with temperature for confidences
+    confidences = softmax_with_temperature(confidences, temp)
+    
+    # Pair answers with confidences and sort by confidence
+    sorted_confidence_pairs = sorted(zip(answers, confidences), key=lambda x: x[1], reverse=True)
+    
+    # Consider only top-k samples
+    top_k_pairs = sorted_confidence_pairs[:k]
+    
+    for answer, confidence in top_k_pairs:
+        votes[answer] += 1  # Each top-k sample gets one vote
+    
+    # Sort the answers by vote counts
+    sorted_votes = sorted(votes.items(), key=lambda x: x[1], reverse=True)
+    
+    # Return the answer with the most votes
+    return sorted_votes[0][0]
