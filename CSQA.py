@@ -73,7 +73,7 @@ def _complete_with_retry(prompt) -> Any:
             model='togethercomputer/LLaMA-2-7B-32K',
             prompt=prompt,
             max_tokens=30,
-            temperature=0.7,  # 假设TEMPERATURE是0.7
+            temperature=0.0,  # 假设TEMPERATURE是0.7
             top_k=50,
             top_p=0.7,
             repetition_penalty=0,
