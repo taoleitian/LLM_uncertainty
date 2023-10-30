@@ -18,7 +18,7 @@ RATIONALE_BATCH = 1
 TEMPERATURE = 0.7
 ENGINE_NAME = 'gpt-3.5-turbo'
 INPUT_FILE = 'dataset/CSQA/dev_rand_split.jsonl'
-OUTPUT_PATH = 'results/CSQA/with_negtive_1.jsonl'
+OUTPUT_PATH = 'results/CSQA/with_negtive_2.jsonl'
 
 
 
