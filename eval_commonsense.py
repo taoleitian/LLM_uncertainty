@@ -2,7 +2,7 @@ import json
 import utils
 import numpy as np
 
-with open('results/CSQA/with_negtive_30.jsonl', 'r') as f:
+with open('results/CSQA/only_postive_30.jsonl', 'r') as f:
   lines = f.readlines()
 
 correct = 0
@@ -26,7 +26,7 @@ for line in lines:
   if not pred:
     continue
   maj_ans = utils.get_maj(ans_list)
-  #maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list, 0.1)
+  #maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list, 0.07)
   target = datas['answer']
   if str(target) == str(maj_ans):
     correct += 1
