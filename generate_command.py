@@ -18,8 +18,8 @@ with open('results.csv', 'w', newline='') as csvfile:
             cmd = f"python3 CSQA.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path}"
             print(cmd)
             os.system(cmd)
-            os.path.join("results/pos_neg", save_path)
-            lines = load_data(save_path)
+            file_path = os.path.join("results/pos_neg", save_path)
+            lines = load_data(file_path)
             pred_list, gt_list, confi_list = process_data(lines)
             acc, ece, auc = get_results(pred_list, gt_list, confi_list)
 
