@@ -31,7 +31,7 @@ def arg_parser():
         "--data_path", type=str, default="results/pos_neg", help="api keys"
     )
     parser.add_argument(
-        "--temprature", type=str, default="0.7", help="api keys"
+        "--temprature", type=float, default="0.7", help="api keys"
     )
     parser.add_argument(
         "--model_type", type=str, default="togethercomputer/LLaMA-2-7B-32K", help="api keys"
