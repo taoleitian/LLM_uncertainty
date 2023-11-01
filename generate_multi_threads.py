@@ -6,7 +6,7 @@ from eval import get_results, load_data, process_data
 
 def process_combination(num_positive, num_negative, counter, temprature, result_queue):
     save_path = f"{num_positive}_{num_negative}_{int(temprature * 10)}_{str(counter).zfill(2)}.jsonl"
-    cmd = f"python3 CSQA.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path} --SC_times 5 --data_path pos_neg_30"
+    cmd = f"python3 CSQA.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path} --SC_times 5 --data_path ./results/pos_neg_30"
     print(cmd)
     os.system(cmd)
     file_path = os.path.join("results/pos_neg_30", save_path)
