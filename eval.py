@@ -98,7 +98,7 @@ def compute_auc_and_coverage(pred_list, gt_list, confi_list):
 
 def main():
     args = arg_parser()
-    lines = load_data('results/two_type_shot/two.jsonl')
+    lines = load_data('results/CSQA/with_negtive_30.jsonl')
     pred_list, gt_list, confi_list = process_data(lines)
     acc, ece, auc = get_results(pred_list, gt_list, confi_list)
 
