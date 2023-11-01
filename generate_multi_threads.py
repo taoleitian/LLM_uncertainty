@@ -24,7 +24,7 @@ with open('results.csv', 'w', newline='') as csvfile:
     writer.writeheader()
 
 temprature = 0.7
-counters = range(1, 6)
+counters = range(1)
 combinations = [(2 * i, 8 - 2 * i) for i in range(5)]
 
 result_queue = queue.Queue()
