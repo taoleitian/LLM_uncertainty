@@ -10,15 +10,15 @@ with open('results.csv', 'w', newline='') as csvfile:
 
     temprature = 0.7
     counters = range(1, 6)
-    combinations = [(i, 8 - i) for i in range(9)]
+    combinations = [(2 * i, 8 - 2 * i) for i in range(5)]
 
     for num_positive, num_negative in combinations:
         for counter in counters:
             save_path = f"{num_positive}_{num_negative}_{int(temprature * 10)}_{str(counter).zfill(2)}.jsonl"
-            cmd = f"python3 CSQA.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path}"
+            cmd = f"python3 CSQA.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path} --SC_times 30 --data_path pos_neg_30"
             print(cmd)
             os.system(cmd)
-            file_path = os.path.join("results/pos_neg", save_path)
+            file_path = os.path.join("results/pos_neg_30", save_path)
             lines = load_data(file_path)
             pred_list, gt_list, confi_list = process_data(lines)
             acc, ece, auc = get_results(pred_list, gt_list, confi_list)
