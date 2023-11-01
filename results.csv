@@ -1,3 +1,1 @@
 num_positive,num_negative,temprature,counters,acc,ece,auc
-0,8,0.7,1,0.6153846153846154,0.5096153846153846,0.4669102204076275
-0,8,0.7,2,nan,nan,nan
