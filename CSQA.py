@@ -73,16 +73,22 @@ def build_input_and_labels(lines, COINFLIP_EXAMPLES, args):
         answer = fields["answerKey"]
 
         prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
-        prompt += "Here are some positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
-        
+        '''
+        if args.num_positive > 0:
+            prompt += "Here are some positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
+        '''
         for index in range(args.num_positive):
+            prompt += "This is a positive sample. As the answer is correct, the confidence is high, close to 1.\n"
             example = json.loads(COINFLIP_EXAMPLES[index])
             question_prompt = format_question(example, is_val=True)
             prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-          
+        '''
+        if args.num_negative > 0:         
         # Negtive examples  
-        prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely high, close to 0.\n"
+            prompt += "Here are some negtive samples. Since the answer is wrong, the confidence level is extremely low, close to 0.\n"
+        '''
         for index in range(args.num_positive, args.num_positive + args.num_negative):
+            prompt += "This is a negative sample. As the answer is wrong, the confidence is low, close to 0.\n"
             example = json.loads(COINFLIP_EXAMPLES[index])
             question_prompt = format_question(example, is_val=True,answer_True=False)
             prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.0, 0.2), 2)) + '.\n\n'
@@ -108,7 +114,7 @@ def _complete_with_retry(args, prompt) -> Any:
             top_k=50,
             top_p=0.7,
             repetition_penalty=0,
-            stop="Question:"
+            stop="This is"
         )
         done = True
         return response, done

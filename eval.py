@@ -6,7 +6,7 @@ import utils
 def arg_parser():
     parser = argparse.ArgumentParser(description="CoT")
     parser.add_argument("--random_seed", type=int, default=1)
-    parser.add_argument("--save_path", type=str, default=".csv")
+    parser.add_argument("--data_path", type=str, default="results/tlt/positive.jsonl")
     parser.add_argument("--results_path", type=str, default=".csv")
     args = parser.parse_args()
     return args
@@ -21,7 +21,7 @@ def process_data(lines):
     for line in lines:
         datas = json.loads(line)
         ans_list, confidence_list = [], []
-        for pred in datas['output']:
+        for pred in datas['output'][:1]:
             output = utils.get_ans_choice_confidence(pred)
             if output:
                 ans, confidence = output
@@ -85,7 +85,7 @@ def compute_auc_and_coverage(pred_list, gt_list, confi_list):
     sorted_indices = np.argsort(confi_list)[::-1]
     y_pred_sorted = np.array(pred_list)[sorted_indices]
     y_true_sorted = np.array(gt_list)[sorted_indices]
-    coverages = np.linspace(0, 1, 20)[1:]
+    coverages = np.linspace(0, 1, 10)[1:]
     selective_accuracies = []
     for c in coverages:
         top_n = int(len(pred_list) * c)
@@ -98,7 +98,8 @@ def compute_auc_and_coverage(pred_list, gt_list, confi_list):
 
 def main():
     args = arg_parser()
-    lines = load_data('results/CSQA/with_negtive_30.jsonl')
+    data_path = args.data_path
+    lines = load_data(data_path)
     pred_list, gt_list, confi_list = process_data(lines)
     acc, ece, auc = get_results(pred_list, gt_list, confi_list)
 
