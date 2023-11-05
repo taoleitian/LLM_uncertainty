@@ -34,7 +34,7 @@ def arg_parser():
         "--temprature", type=float, default="0.7", help="api keys"
     )
     parser.add_argument(
-        "--model_type", type=str, default="togethercomputer/LLaMA-2-7B-32K", help="api keys"
+        "--model_type", type=str, default="togethercomputer/LLaMA-2-70B-32K", help="api keys"
     )  
     parser.add_argument(
         "--max_tokens", type=int, default="50", help="api keys"
@@ -106,7 +106,7 @@ def _complete_with_retry(args, prompt) -> Any:
     done = False
     try:
         response = together.Complete.create(
-            model="togethercomputer/LLaMA-2-7B-32K",
+            model=args.model_type,
             prompt=prompt,
             max_tokens=args.max_tokens,
             temperature=args.temprature,  # 假设TEMPERATURE是0.7

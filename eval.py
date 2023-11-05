@@ -6,7 +6,7 @@ import utils
 def arg_parser():
     parser = argparse.ArgumentParser(description="CoT")
     parser.add_argument("--random_seed", type=int, default=1)
-    parser.add_argument("--data_path", type=str, default="eval_leader/leader.jsonl")
+    parser.add_argument("--data_path", type=str, default="results/pos_neg_30/4_4_7_00.jsonl")
     parser.add_argument("--results_path", type=str, default=".csv")
     args = parser.parse_args()
     return args
@@ -21,13 +21,14 @@ def process_data(lines):
     for line in lines:
         datas = json.loads(line)
         ans_list, confidence_list = [], []
-        for pred in datas['output'][:1]:
+        for pred in datas['output']:
             output = utils.get_ans_choice_confidence(pred)
             if output:
                 ans, confidence = output
                 ans_list.append(ans)
                 confidence_list.append(confidence)
-        maj_ans = utils.get_maj(ans_list) if ans_list else None
+        #maj_ans = utils.get_maj(ans_list) if ans_list else None
+        maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list) if ans_list else None
         if confidence_list:
             confi_list.append(np.mean(confidence_list))
             pred_list.append(maj_ans)
@@ -49,13 +50,14 @@ def compute_ece(answer, output, confidence, num_bins=10):
     # 对每个样本进行统计
     for c, conf in zip(correct, confidence):
         # 查找对应的 bin
+        conf = conf / 0.1
         bin_idx = np.digitize(conf, bin_boundaries) - 1
         bin_idx = np.clip(bin_idx, 0, num_bins - 1)
         
         # 更新 bin 统计
         bin_count[bin_idx] += 1
         bin_acc[bin_idx] += c
-        bin_conf[bin_idx] += conf
+        bin_conf[bin_idx] += conf  
     
     # 计算每个 bin 的准确率和置信度
     bin_acc /= (bin_count + 1e-15)

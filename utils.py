@@ -162,7 +162,7 @@ def softmax_with_temperature(confidences, temperature=1.0):
     softmax_confidences = exp_confidences / sum_exp_confidences
     
     return softmax_confidences.tolist()
-def vote_based_on_confidence(answers, confidences, temp=1.0):
+def vote_based_on_confidence(answers, confidences, temp=0.01):
     votes = defaultdict(float)
     confidences = softmax_with_temperature(confidences, temperature=temp)
     for answer, confidence in zip(answers, confidences):
@@ -176,7 +176,7 @@ def vote_based_on_confidence(answers, confidences, temp=1.0):
     return sorted_votes[0][0]
 from collections import defaultdict
 
-def major_vote_top_k(answers, confidences, k=3, temp=1.0):
+def major_vote_top_k(answers, confidences, k=5, temp=1):
     votes = defaultdict(int)
     
     # Calculate softmax with temperature for confidences

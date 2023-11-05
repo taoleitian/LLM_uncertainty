@@ -6,8 +6,8 @@ from eval import get_results, load_data, process_data
 
 def process_combination(num_positive, num_negative, counter, temprature, result_queue):
     save_path = f"{num_positive}_{num_negative}_{int(temprature * 10)}_{str(counter).zfill(2)}.jsonl"
-    data_path = './results/pos_neg_30'
-    cmd = f"python3 CSQA_pos_neg.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path} --SC_times 10 --data_path {data_path}"
+    data_path = './results/70B'
+    cmd = f"python3 CSQA_pos_neg.py --num_positive {num_positive} --num_negative {num_negative} --temprature {temprature} --save_path {save_path} --SC_times 1 --data_path {data_path}"
     print(cmd)
     os.system(cmd)
     file_path = os.path.join(data_path, save_path)
@@ -26,7 +26,7 @@ with open('results.csv', 'w', newline='') as csvfile:
 
 temprature = 0.7
 counters = range(1)
-combinations = [(2 * i, 8 - 2 * i) for i in range(5)]
+combinations = [(8 - 2 * i, 2 * i) for i in range(3)]
 
 result_queue = queue.Queue()
 
