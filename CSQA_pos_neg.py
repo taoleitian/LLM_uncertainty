@@ -34,7 +34,7 @@ def arg_parser():
         "--temprature", type=float, default="0.7", help="api keys"
     )
     parser.add_argument(
-        "--model_type", type=str, default="togethercomputer/LLaMA-2-7B-32K", help="api keys"
+        "--model_type", type=str, default="togethercomputer/llama-2-70b", help="api keys"
     )  
     parser.add_argument(
         "--max_tokens", type=int, default="50", help="api keys"
