@@ -71,9 +71,10 @@ def build_input_and_labels(lines, COINFLIP_EXAMPLES, args):
         fields = json.loads(line.split('\n')[0].split('\t')[0])
         question = format_question(fields, is_val=False)
         answer = fields["answerKey"]
+        prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
+
         if args.num_positive > 0:
             prompt += f"Here are {str(args.num_positive)} positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
-        prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
         for index in range(args.num_positive):
             #prompt += "This is a positive sample. As the answer is correct, the confidence is high, close to 1.\n"
             example = json.loads(COINFLIP_EXAMPLES[index])
