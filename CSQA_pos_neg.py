@@ -135,7 +135,7 @@ def main():
     
     output_path = os.path.join(args.data_path, args.save_path)
 
-    COINFLIP_EXAMPLES = load_dataset('dataset/president_right.jsonl')
+    COINFLIP_EXAMPLES = load_dataset('dataset/CSQA/test_rand_split_no_answers.jsonl')
     lines = load_dataset(args.dataset_path)
 
     input_list, label_list = build_input_and_labels(lines, COINFLIP_EXAMPLES, args)
