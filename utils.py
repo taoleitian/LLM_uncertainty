@@ -14,7 +14,7 @@ def _is_float(s):
 FINAL_ANS = 'Answer:'
 FINAL_CONFIDENCE = 'Confidence:'
 
-def format_question(json_data, is_val=False, answer_True=True):
+def format_question(json_data, is_val=False, answer_True=True, if_confidence=False):
     question_concept = json_data["question"]["question_concept"]
     stem = json_data.get("question", {}).get("stem", "Unknown question")
     choices = json_data.get("question", {}).get("choices", [])
@@ -35,6 +35,10 @@ def format_question(json_data, is_val=False, answer_True=True):
       else:
           wrong_answers = [choice for choice in ["A", "B", "C", "D", "E"] if choice != answer_key]
           formatted_str += f"Answer: {wrong_answers[random.randrange(0, 4)]}"  # Just picking the first wrong answer for illustration
+    if if_confidence ==True:
+      confidence = json_data["confidence"]    
+      formatted_str += '\n'+f'Confidence: {confidence}' + '.\n\n'
+
     else:
       formatted_str += f"Answer:"
 
