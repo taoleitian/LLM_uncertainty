@@ -6,8 +6,8 @@ import math
 with open('results/calibation/calibation.jsonl', 'r') as f:
     lines = f.readlines()
     # Initialize a Counter to store the counts of each answer
-    answer_counts = Counter()
     for line in lines:
+        answer_counts = Counter()
         output = json.loads(line)["output"]
         # Iterate through each string in the output list
         for item in output:
@@ -17,8 +17,10 @@ with open('results/calibation/calibation.jsonl', 'r') as f:
             if answer in ['A', 'B', 'C', 'D', 'E']:
                 answer_counts[answer] += 1
         total_answers = sum(answer_counts.values())
-
-        # 计算每个答案的概率
+        key, count = answer_counts.most_common(1)[0]
+        print(f"The most common answer is: {key} with {count} occurrences.")
+        '''
+        # 计算每个答案的概率s
         answer_probabilities = [count / total_answers for count in answer_counts.values()]
 
         # 计算熵
@@ -35,3 +37,4 @@ with open('results/calibation/calibation.jsonl', 'r') as f:
         confidence = (1 - normalized_entropy)*4
 
         print(f"The confidence level based on the entropy is: {confidence}")
+        '''

@@ -135,7 +135,7 @@ def main():
     
     output_path = os.path.join(args.data_path, args.save_path)
 
-    COINFLIP_EXAMPLES = load_dataset('eval_leader/data_calibration.jsonl')
+    COINFLIP_EXAMPLES = load_dataset('eval_leader/calibration/data_calibration.jsonl')
     lines = load_dataset(args.dataset_path)
 
     input_list, label_list = build_input_and_labels(lines, COINFLIP_EXAMPLES, args)
