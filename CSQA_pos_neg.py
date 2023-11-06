@@ -88,7 +88,7 @@ def build_input_and_labels(lines, COINFLIP_EXAMPLES, args):
             prompt += f"Here are  {str(args.num_negative)}  negtive samples. Since the answer is wrong, the confidence level is extremely low, close to 0.\n"
         
         for index in range(args.num_positive, args.num_positive + args.num_negative):
-            prompt += "This is a negative sample. As the answer is wrong, the confidence is low, close to 0.\n"
+            #prompt += "This is a negative sample. As the answer is wrong, the confidence is low, close to 0.\n"
             example = json.loads(COINFLIP_EXAMPLES[index])
             question_prompt = format_question(example, is_val=True,answer_True=False)
             prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.0, 0.2), 2)) + '.\n\n'

@@ -112,13 +112,14 @@ def get_str_ans(pred):
     return ''
   
 def get_ans_choice_confidence(pred):
-  text = pred.split('Q')[0].split('[eot]')[0].replace('\n', '').strip()
+  text = pred.split('This is')[0].split('Q')[0].split('[eot]')[0].replace('\n', '').strip()
   if text.rfind(FINAL_CONFIDENCE) >= 0:
     confidence = text[text.rfind(FINAL_CONFIDENCE) + len(FINAL_CONFIDENCE):len(text)].strip()
     if confidence.endswith('.'):
       confidence = confidence[:-1]
-
   else:
+    return ''
+  if not confidence:
     return ''
   pred_ans = text[0]
   return pred_ans, float(confidence)

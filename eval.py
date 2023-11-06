@@ -2,11 +2,15 @@ import json
 import numpy as np
 import argparse
 import utils
+from sklearn.metrics import roc_curve, auc
+import numpy as np
+from sklearn.preprocessing import label_binarize
+
 
 def arg_parser():
     parser = argparse.ArgumentParser(description="CoT")
     parser.add_argument("--random_seed", type=int, default=1)
-    parser.add_argument("--data_path", type=str, default="results/pos_neg_30/4_4_7_00.jsonl")
+    parser.add_argument("--data_path", type=str, default="results/70B/4_4_7_00.jsonl")
     parser.add_argument("--results_path", type=str, default=".csv")
     args = parser.parse_args()
     return args
@@ -27,8 +31,8 @@ def process_data(lines):
                 ans, confidence = output
                 ans_list.append(ans)
                 confidence_list.append(confidence)
-        #maj_ans = utils.get_maj(ans_list) if ans_list else None
-        maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list) if ans_list else None
+        maj_ans = utils.get_maj(ans_list) if ans_list else None
+        #maj_ans = utils.vote_based_on_confidence(ans_list, confidence_list) if ans_list else None
         if confidence_list:
             confi_list.append(np.mean(confidence_list))
             pred_list.append(maj_ans)
@@ -72,6 +76,7 @@ def compute_acc(pred_list, gt_list):
     correct = np.sum(np.array(pred_list) == np.array(gt_list))
     total = len(gt_list)
     return correct / total
+
 def get_results(pred_list, gt_list, confi_list):
     ece = compute_ece(pred_list, gt_list, confi_list)
     print(f"Expected Calibration Error (ECE): {ece:.4f}")
@@ -82,11 +87,6 @@ def get_results(pred_list, gt_list, confi_list):
     auc = compute_auc(pred_list, gt_list, confi_list)
     print(f"AUC: {auc:.4f}")
     return acc, ece, auc
-from sklearn.metrics import roc_curve, auc
-import numpy as np
-
-import numpy as np
-from sklearn.preprocessing import label_binarize
 
 def compute_auc(pred_list, gt_list, confi_list):
     classes = np.unique(gt_list)
