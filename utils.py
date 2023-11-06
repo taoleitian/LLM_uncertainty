@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from collections import defaultdict
 import random
 random.seed(0)
@@ -79,9 +80,6 @@ def get_ans(pred):
   else:
     return ''
 
-
-from collections import Counter
-
 def get_maj(ans_list):
   is_all_float = False
   float_list = []
@@ -117,7 +115,7 @@ def get_ans_choice_confidence(pred):
     if confidence.endswith('.'):
       confidence = confidence[:-1]
     if confidence == '':
-      confidence = 0.5
+      confidence = 0.05
   else:
     return ''
   pred_ans = text[0]

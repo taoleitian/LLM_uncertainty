@@ -10,7 +10,7 @@ from sklearn.preprocessing import label_binarize
 def arg_parser():
     parser = argparse.ArgumentParser(description="CoT")
     parser.add_argument("--random_seed", type=int, default=1)
-    parser.add_argument("--data_path", type=str, default="results/70B/4_4_7_00.jsonl")
+    parser.add_argument("--data_path", type=str, default="results/70B/8_0_7_00.jsonl")
     parser.add_argument("--results_path", type=str, default=".csv")
     args = parser.parse_args()
     return args
@@ -54,7 +54,7 @@ def compute_ece(answer, output, confidence, num_bins=10):
     # 对每个样本进行统计
     for c, conf in zip(correct, confidence):
         # 查找对应的 bin
-        conf = conf / 0.1
+        conf = conf 
         bin_idx = np.digitize(conf, bin_boundaries) - 1
         bin_idx = np.clip(bin_idx, 0, num_bins - 1)
         
@@ -89,39 +89,29 @@ def get_results(pred_list, gt_list, confi_list):
     return acc, ece, auc
 
 def compute_auc(pred_list, gt_list, confi_list):
-    classes = np.unique(gt_list)
-    coverage_auc_scores = []
 
-    for current_class in classes:
-        # Binarize predictions and ground truth for the current class
-        pred_binary = np.array([1 if pred == current_class else 0 for pred in pred_list])
-        gt_binary = np.array([1 if gt == current_class else 0 for gt in gt_list])
-        
-        # Sort by confidence list
-        sorted_indices = np.argsort(-np.array(confi_list))  # We negate to sort in descending order
-        pred_sorted = pred_binary[sorted_indices]
-        gt_sorted = gt_binary[sorted_indices]
+    correctness = np.array([1 if a == b else 0 for a, b in zip(pred_list, gt_list)])
+    confidences = np.array(confi_list)
+ 
 
-        # Compute selective accuracies for different coverage thresholds
-        coverages = np.linspace(0, 1, 10)[1:]
-        selective_accuracies = []
-        for coverage in coverages:
-            coverage_n = int(len(pred_list) * coverage)
-            if coverage_n == 0:
-                continue
-            top_n_predictions = pred_sorted[:coverage_n]
-            top_n_true = gt_sorted[:coverage_n]
-            accuracy_at_coverage = np.mean(top_n_predictions == top_n_true)
-            selective_accuracies.append(accuracy_at_coverage)
-        
-        # Integrate over the coverage thresholds to compute the coverage AUC for that class
-        if selective_accuracies:  # Check if list is not empty
-            coverage_auc = np.trapz(selective_accuracies, coverages)
-            coverage_auc_scores.append(coverage_auc)
+    # Sort by confidence scores in descending order
+    sorted_indices = np.argsort(-confidences)
+    sorted_correctness = correctness[sorted_indices]
 
-    # Average the coverage AUC over all classes to get the final metric
-    macro_coverage_auc = np.mean(coverage_auc_scores)
-    return macro_coverage_auc
+    # Calculate the cumulative sum of correctness indicators and cumulative coverage
+    cumulative_correctness = np.cumsum(sorted_correctness)
+    coverage_levels = np.arange(1, len(correctness) + 1) / len(correctness)
+
+    # Calculate selective accuracy for each coverage level
+    selective_accuracy = cumulative_correctness / coverage_levels
+
+    # Correct the AUC calculation
+    # Divide the cumulative sum by the number of data points for each coverage level
+    selective_accuracy = selective_accuracy / len(correctness)
+
+    # Integrate using the trapezoidal rule to get the AUC
+    auc = np.trapz(selective_accuracy, coverage_levels)
+    return auc
 
 def compute_auc_and_coverage(pred_list, gt_list, confi_list):
     sorted_indices = np.argsort(confi_list)[::-1]
