@@ -34,7 +34,7 @@ def arg_parser():
         "--temprature", type=float, default="0.7", help="api keys"
     )
     parser.add_argument(
-        "--model_type", type=str, default="togethercomputer/llama-2-70b", help="api keys"
+        "--model_type", type=str, default="togethercomputer/llama-2-7b", help="api keys"
     )  
     parser.add_argument(
         "--max_tokens", type=int, default="50", help="api keys"
@@ -44,6 +44,7 @@ def arg_parser():
         #"--api_keys", type=str, default="54dd8b1db669c11142c88e43391741d5cd5865078c9a95095a4db72ba89b6bbc", help="api keys"
     ) 
     parser.add_argument(
+        #"--dataset_path", type=str, default='dataset/CSQA/dev_rand_split.jsonl', help="api keys"dataset/CSQA/train_rand_split.jsonl
         "--dataset_path", type=str, default='dataset/CSQA/dev_rand_split.jsonl', help="api keys"
     )
 
@@ -74,14 +75,14 @@ def build_input_and_labels(lines, COINFLIP_EXAMPLES, args):
         answer = fields["answerKey"]
         prompt = 'Answer the following question to the best of your ability, and provide a score between 0 and 1 to indicate the confidence you have in your answer. Confidence scores closer to 0 indicate you have less confidence in your answer, while scores closer to 1 indicate you have more confidence in your answer. You must answer the question with one of the valid choices. \n\n'
 
-        if args.num_positive > 0:
-            prompt += f"Here are {str(args.num_positive)} positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
+        #if args.num_positive > 0:
+            #prompt += f"Here are {str(args.num_positive)} positive samples. Since the answer is correct, the confidence level is extremely high, close to 1.\n"
         for index in range(args.num_positive):
             #prompt += "This is a positive sample. As the answer is correct, the confidence is high, close to 1.\n"
             example = json.loads(COINFLIP_EXAMPLES[index])
-            question_prompt = format_question(example, is_val=True)
-            #prompt += question_prompt #+ '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
-            prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
+            question_prompt = format_question(example, is_val=True, if_confidence=True)
+            prompt += question_prompt #+ '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
+            #prompt += question_prompt + '\n'+'Confidence: ' + str(round(random.uniform(0.8, 1.0), 2)) + '.\n\n'
         
         if args.num_negative > 0:         
         # Negtive examples  
@@ -134,7 +135,7 @@ def main():
     
     output_path = os.path.join(args.data_path, args.save_path)
 
-    COINFLIP_EXAMPLES = load_dataset('dataset/CSQA/dev_rand_split.jsonl')
+    COINFLIP_EXAMPLES = load_dataset('eval_leader/data_calibration.jsonl')
     lines = load_dataset(args.dataset_path)
 
     input_list, label_list = build_input_and_labels(lines, COINFLIP_EXAMPLES, args)
@@ -150,10 +151,13 @@ def main():
                 response, done = _complete_with_retry(args, input_batch)
                 if done:
                     pred['output'].append(response['output']['choices'][0]['text'])
+                if time_prompt % 20 == 0:
+                    print(time_prompt)
+                    
             pred['answer'] = label_list[index]
             json.dump(pred, outfile)
             outfile.write('\n')
-            #print(index)
+            
             if index and index % 50 == 0:
                 print(index, '/', len(input_list))
                 print('time: {:.2f}'.format(time.time() - start_time))

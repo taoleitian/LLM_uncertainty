@@ -35,12 +35,11 @@ def format_question(json_data, is_val=False, answer_True=True, if_confidence=Fal
       else:
           wrong_answers = [choice for choice in ["A", "B", "C", "D", "E"] if choice != answer_key]
           formatted_str += f"Answer: {wrong_answers[random.randrange(0, 4)]}"  # Just picking the first wrong answer for illustration
+    else:
+      formatted_str += f"Answer:"
     if if_confidence ==True:
       confidence = json_data["confidence"]    
       formatted_str += '\n'+f'Confidence: {confidence}' + '.\n\n'
-
-    else:
-      formatted_str += f"Answer:"
 
     return formatted_str
 
@@ -112,14 +111,14 @@ def get_str_ans(pred):
     return ''
   
 def get_ans_choice_confidence(pred):
-  text = pred.split('This is')[0].split('Q')[0].split('[eot]')[0].replace('\n', '').strip()
+  text = pred.split('Q')[0].split('[eot]')[0].replace('\n', '').strip()
   if text.rfind(FINAL_CONFIDENCE) >= 0:
-    confidence = text[text.rfind(FINAL_CONFIDENCE) + len(FINAL_CONFIDENCE):len(text)].strip()
+    confidence = text[text.rfind(FINAL_CONFIDENCE) + len(FINAL_CONFIDENCE):text.rfind(FINAL_CONFIDENCE) + len(FINAL_CONFIDENCE)+5].strip()
     if confidence.endswith('.'):
       confidence = confidence[:-1]
+    if confidence == '':
+      confidence = 0.5
   else:
-    return ''
-  if not confidence:
     return ''
   pred_ans = text[0]
   return pred_ans, float(confidence)
