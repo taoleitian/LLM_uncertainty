@@ -26,7 +26,7 @@ with open('results.csv', 'w', newline='') as csvfile:
 
 temprature = 0.7
 counters = range(1)
-combinations = [(2 * i, 0) for i in range(6)]
+combinations = [(2 * i, 0) for i in range(1, 6)]
 
 result_queue = queue.Queue()
 

@@ -151,8 +151,8 @@ def main():
                 response, done = _complete_with_retry(args, input_batch)
                 if done:
                     pred['output'].append(response['output']['choices'][0]['text'])
-                if time_prompt % 20 == 0:
-                    print(time_prompt)
+                #if time_prompt % 20 == 0:
+                    #print(time_prompt)
                     
             pred['answer'] = label_list[index]
             json.dump(pred, outfile)
