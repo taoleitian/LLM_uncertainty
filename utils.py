@@ -32,12 +32,12 @@ def format_question(json_data, is_val=False, answer_True=True, if_confidence=Fal
         formatted_str += f"{label}. {text}\n"
     if is_val ==True:    
       if answer_True:
-          formatted_str += f"Answer: {answer_key}"
+          formatted_str += f"The answer is {answer_key}"
       else:
           wrong_answers = [choice for choice in ["A", "B", "C", "D", "E"] if choice != answer_key]
-          formatted_str += f"Answer: {wrong_answers[random.randrange(0, 4)]}"  # Just picking the first wrong answer for illustration
+          formatted_str += f"The answer is {wrong_answers[random.randrange(0, 4)]}"  # Just picking the first wrong answer for illustration
     else:
-      formatted_str += f"Answer:"
+      formatted_str += f"The answer is "
     if if_confidence ==True:
       confidence = json_data["confidence"]    
       formatted_str += '\n'+f'Confidence: {confidence}' + '.\n\n'
@@ -140,6 +140,17 @@ def get_str_ans_confidence(pred):
     return pred_ans, float(confidence)
   else:
     return ''
+  
+
+
+def get_ans_confidence_list(pred):
+  choice = ["A","B", "C", "D", "E"]
+  text = pred.replace('\n', '').strip()
+  logit = eval(text)
+  confidence = max(logit)
+  ans = choice[logit.index(confidence)]
+  return ans, confidence
+  
 def softmax_with_temperature(confidences, temperature=1.0):
     """
     使用temperature参数执行softmax归一化

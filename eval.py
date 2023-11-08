@@ -10,8 +10,9 @@ from sklearn.preprocessing import label_binarize
 def arg_parser():
     parser = argparse.ArgumentParser(description="CoT")
     parser.add_argument("--random_seed", type=int, default=1)
-    parser.add_argument("--data_path", type=str, default="results/70B/8_0_7_00.jsonl")
+    parser.add_argument("--data_path", type=str, default="results/president/logit.jsonl")
     parser.add_argument("--results_path", type=str, default=".csv")
+    parser.add_argument("--logits", type=bool, default="True")
     args = parser.parse_args()
     return args
 
@@ -20,13 +21,16 @@ def load_data(file_path):
         lines = f.readlines()
     return lines
 
-def process_data(lines):
+def process_data(args, lines):
     pred_list, gt_list, confi_list = [], [], []
     for line in lines:
         datas = json.loads(line)
         ans_list, confidence_list = [], []
         for pred in datas['output']:
-            output = utils.get_ans_choice_confidence(pred)
+            if args.logits: 
+                output = utils.get_ans_confidence_list(pred)
+            else: 
+                output = utils.get_ans_choice_confidence(pred)
             if output:
                 ans, confidence = output
                 ans_list.append(ans)
@@ -132,7 +136,7 @@ def main():
     args = arg_parser()
     data_path = args.data_path
     lines = load_data(data_path)
-    pred_list, gt_list, confi_list = process_data(lines)
+    pred_list, gt_list, confi_list = process_data(args, lines)
     acc, ece, auc = get_results(pred_list, gt_list, confi_list)
 
 if __name__ == "__main__":

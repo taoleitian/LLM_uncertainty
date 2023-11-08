@@ -39,7 +39,7 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
 # 在所有工作线程完成后，主线程将结果从队列中取出并写入文件
 while not result_queue.empty():
     result = result_queue.get()
-    with open('results_70B.csv', 'w', newline='') as csvfile:
+    with open('results_confidence.csv', 'w', newline='') as csvfile:
         fieldnames = ['num_positive', 'num_negative', 'temprature', 'counters', 'acc', 'ece', 'auc']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writerow(result)
